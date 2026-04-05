@@ -229,6 +229,13 @@ class NonSteamManager:
 
         print(f"DEBUG: Checking userdata in {userdata}")
 
+        def get_ci(d, key, default=""):
+            key_lower = key.lower()
+            for k, v in d.items():
+                if k.lower() == key_lower:
+                    return v
+            return default
+
         for user_dir in userdata.iterdir():
             shortcuts_path = user_dir / "config" / "shortcuts.vdf"
             if shortcuts_path.exists():
@@ -241,14 +248,24 @@ class NonSteamManager:
                     print(f"DEBUG: Parsed {len(items)} items from VDF")
 
                     for item in items:
-                        app_name = item.get("AppName", "")
-                        exe_path = item.get("Exe", "")
+                        app_name = get_ci(item, "appname", "")
+                        exe_path = get_ci(item, "exe", "")
+                        raw_id = get_ci(item, "appid")
 
-                        raw_id = item.get("appid")
                         if raw_id is not None:
-                            generated_id = raw_id & 0xffffffff
-                            mapping[str(generated_id)] = app_name
-                            print(f"DEBUG: Mapped (Explicit) {generated_id} -> {app_name}")
+                            try:
+                                id_32 = int(raw_id) & 0xffffffff
+                                mapping[str(id_32)] = app_name
+
+                                id_64 = (id_32 << 32) | 0x02000000
+                                mapping[str(id_64)] = app_name
+
+                                id_signed = struct.unpack('<i', struct.pack('<I', id_32))[0]
+                                mapping[str(id_signed)] = app_name
+
+                                print(f"DEBUG: Mapped (Explicit) {id_32} -> {app_name}")
+                            except (ValueError, TypeError):
+                                pass
 
                         if app_name and exe_path:
                             crc_input = (exe_path + app_name).encode("utf-8")
@@ -256,7 +273,11 @@ class NonSteamManager:
                             gen_id = crc | 0x80000000
                             mapping[str(gen_id)] = app_name
 
-                            print(f"DEBUG: Mapped (Calculated) {gen_id} -> {app_name}")
+                            if not exe_path.startswith('"'):
+                                crc_input_q = (f'"{exe_path}"' + app_name).encode("utf-8")
+                                crc_q = zlib.crc32(crc_input_q) & 0xffffffff
+                                gen_id_q = crc_q | 0x80000000
+                                mapping[str(gen_id_q)] = app_name
 
                 except Exception as e:
                     print(f"Error parsing shortcuts.vdf at {shortcuts_path}: {e}")
@@ -264,7 +285,6 @@ class NonSteamManager:
 
     @staticmethod
     def parse_binary_vdf(data):
-
         def read_string(d, p):
             end = d.find(b'\x00', p)
             if end == -1: raise ValueError("Unterminated string")
@@ -295,9 +315,15 @@ class NonSteamManager:
                     res[key] = val
                 elif type_byte == 0x02:
                     if p + 4 > len(d): break
-                    val = struct.unpack('<I', d[p:p+4])[0] # Unsigned
+                    val = struct.unpack('<I', d[p:p+4])[0]
                     p += 4
                     res[key] = val
+                elif type_byte == 0x03:
+                    if p + 4 > len(d): break
+                    p += 4
+                elif type_byte == 0x07:
+                    if p + 8 > len(d): break
+                    p += 8
                 else:
                     print(f"DEBUG: Unknown type {hex(type_byte)} at {p-1}")
                     break
@@ -311,7 +337,7 @@ class NonSteamManager:
                 if data[ptr] == 0x00:
                     ptr += 1
                     key, ptr = read_string(data, ptr)
-                    if key == "shortcuts":
+                    if key.lower() == "shortcuts":
                         root_map, ptr = parse_map(data, ptr)
                         for k, v in root_map.items():
                             if isinstance(v, dict):
