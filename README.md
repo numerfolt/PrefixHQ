@@ -3,6 +3,7 @@
 ![Linux](https://img.shields.io/badge/Platform-Linux-%23FCC624?logo=linux)
 ![Python 3.8+](https://img.shields.io/badge/Python-3.8%2B-blue?logo=python)
 ![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg?logo=gnu)
+![Downloads](https://img.shields.io/github/downloads/Nastas95/PrefixHQ/total?logo=github&label=Downloads)
 
 A modern, visual manager for Steam CompatData (Proton/Wine prefixes) on Linux.  
 Transform your folder structure into a beautiful game library with automatic cover art and multi-library awareness.
