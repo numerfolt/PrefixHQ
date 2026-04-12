@@ -5,142 +5,81 @@
 ![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg?logo=gnu)
 ![Downloads](https://img.shields.io/github/downloads/Nastas95/PrefixHQ/total?logo=github&label=Downloads)
 
-A modern, visual manager for Steam CompatData (Proton/Wine prefixes) on Linux.  
-Transform your folder structure into a beautiful game library with automatic cover art and multi-library awareness.
+> A visual manager for Steam Proton/Wine prefixes on Linux.
 
-<img width="1005" height="754" alt="immagine" src="https://github.com/user-attachments/assets/fba0f681-3ec1-41e0-ab05-12d24eb94ec7" />
+Steam names your prefix folders after AppIDs — so instead of "Starfield" you get "1091500". PrefixHQ turns that pile of numbers into a proper library with cover art, game names, and a clear indication of which prefixes are still attached to an installed game and which are just taking up space
 
----
-
-## ✨ Features
-
-### 🖼️ Visual Game Library
-- **Responsive Grid Layout** – Card-based interface with high-quality Steam cover art
-- **Automatic Cover Downloads** – Fetches official header images from Steam API
-- **Local Image Caching** – Saves covers to `~/.config/PrefixHQ/cache/` for instant reloads
-- **Custom Cover Support** – Override covers via URL, local file, or SteamGridDB search
-
-### 📚 Multi-Library Awareness
-- **Automatic Library Detection** – Parses `libraryfolders.vdf` to discover *all* Steam libraries (primary + secondary drives, external SSDs)
-- **Cross-Library Matching** – Correctly pairs prefixes with game names even when game files reside in a different library
-- **Installation Status Tracking** – Visual indicators distinguish installed vs. orphaned prefixes:
-  - ✅ **Green** = Game currently installed
-  - ⚠️ **Red** = Prefix orphaned (game uninstalled)
-
-### ⚙️ Universal Compatibility
-- Works out-of-the-box with:
-  - Native Steam (`~/.steam/steam`)
-  - Flatpak (`~/.var/app/com.valvesoftware.Steam/`)
-  - Snap (`~/snap/steam/common/`)
-
-### ⚡ Performance & Safety
-- **Background Scanning** – Async prefix detection via `QThread` (no UI freezing)
-- **Smart Deduplication** – Handles edge cases where same AppID appears across libraries
-- **Permission-Aware** – Skips unreadable directories gracefully
-- **Safe Deletion** – Confirmation dialogs before removing prefixes
-
-### 🖱️ Context Menu Actions (Right-Click)
-- `Open Prefix Folder` – Jump directly to `compatdada` directory
-- `Search on SteamGridDB` – Find community artwork alternatives
-- `Load Cover from File...` – Use local image
-- `Load Cover from URL...` – Fetch custom cover from web
-- `Mark as Installed/Uninstalled` – Override detection status manually
+<img width="1005" height="754" alt="PrefixHQ screenshot" src="https://github.com/user-attachments/assets/fba0f681-3ec1-41e0-ab05-12d24eb94ec7" />
 
 ---
 
-## 🛠️ Requirements
+## Features
 
-| Component | Requirement |
-|-----------|-------------|
-| **OS** | Linux |
-| **Python** | 3.8+ |
-| **Dependencies** | `PyQt6>=6.4.0`, `requests>=2.28.0` |
++ **Visual library** — cover art fetched from Steam and cached locally, so subsequent launches are instant
 
-> 💡 All other dependencies (`os`, `sys`, `json`, `pathlib`, etc.) are part of Python's standard library.
++ **Multi-library support** — parses `libraryfolders.vdf` to find all your Steam libraries automatically, including secondary drives and external SSDs. Cross-library matching works even when game files and prefix live in different locations
+
++ **Orphan detection** — green means the game is installed, red means the prefix is stale and can be cleaned up
+
++ **Works with native Steam, Flatpak, and Snap** out of the box
+
++ **Safe deletion** — confirmation dialogs before anything gets removed. Deleting a prefix is permanent (saves, configs, mods — all gone), so PrefixHQ makes sure you mean it
+
++ **Right-click menu** to copy the prefix ID, load custom cover art (from file, URL, or SteamGridDB), or manually override the install status
 
 ---
 
-## 🚀 Installation & Usage
+## Requirements
 
+- Linux
+- Python 3.8+ (If you run directly the .py file)
+- `PyQt6 >= 6.4.0`, `requests >= 2.28.0`
 
-### Option 1: Binary Releases
-Download the latest Binary from the [Releases Page](https://github.com/yourusername/PrefixHQ/releases).
+---
 
+## Installation
 
-### Option 2: Run from Source
+**Binary (recommended):** grab the latest release from the [Releases page](https://github.com/Nastas95/PrefixHQ/releases)
 
+**From source:**
 ```bash
-# Clone the repository
 git clone https://github.com/Nastas95/PrefixHQ
 cd PrefixHQ
-
-# Install dependencies
 pip install -r requirements.txt
-
-# Launch the application
 python PrefixHQ.py
 ```
 
 ---
 
-## 🎮 How It Works
+## How it works
 
-1. **Scanning**  
-   On launch, PrefixHQ scans all Steam installations (Native/Flatpak/Snap) and parses `libraryfolders.vdf` to discover every library location.
+On launch, PrefixHQ scans your Steam installations and reads `libraryfolders.vdf` to find every library. It then looks through `steamapps/compatdata/` and matches each AppID folder to a game name — first via local `.acf` manifest files, then via the Steam API as a fallback
 
-2. **Matching**  
-   Scans `steamapps/compatdata/` folders and matches AppID-named directories to installed games using:
-   - Local `.acf` manifest files (primary method)
-   - Steam API fallback (if needed)
-
-3. **Visualizing**  
-   Presents prefixes as visual cards with:
-   - Game cover art
-   - AppID and custom name
-   - Status indicator (installed vs. uninstalled)
-
-4. **Cleaning**  
-   Safely delete orphaned prefixes to reclaim disk space — with confirmation dialogs to prevent accidents.
+The result is a card grid where each prefix shows the game name, cover art, and whether the game is currently installed
 
 ---
 
-## ⚙️ Configuration & Data Storage
+## Data storage
 
-All data is stored locally under `~/.config/PrefixHQ/`:
+Everything lives in `~/.config/PrefixHQ/`:
 
-| File/Folder | Purpose |
-|-------------|---------|
-| `prefix_db.json` | Database storing custom names, manual status overrides, and API cache |
-| `cache/` | Local storage for downloaded cover art (avoids repeated API calls) |
-
-> 🔁 First launch may take 10–30 seconds while cover art downloads. Subsequent launches are instant thanks to caching.
+- `prefix_db.json` — custom names, manual status overrides, API cache
+- `cache/` — downloaded cover art
 
 ---
 
-## ⚠️ Important Warning
-
-> [!WARNING]
-> **Deleting a prefix permanently removes all data inside that Proton container**, including:
-> - Windows game saves
-> - Configuration files
-> - Installed mods and custom content
->
-> **Always verify** a prefix is truly orphaned before deletion. When in doubt, back up the folder first.
+> **Warning:** deleting a prefix removes everything inside that Proton container — saves, configs, mods. Make sure it's actually orphaned before you delete it. When in doubt, back it up first
 
 ---
 
-## 🤝 Contributing & Support
+## Contributing
 
-- 💡 Have an idea for a new theme? Open a PR or suggest it in an issue!
-- 🐛 Found a bug? [Open an issue](https://github.com/Nastas95/PrefixHQ/issues)
-
----
-*Developed with ❤️ and a little AI assistance for the Steam Deck and PC Gaming community*
+Bug reports and feature requests go in [Issues](https://github.com/Nastas95/PrefixHQ/issues)
 
 ---
 
-## 📝 License
+*Developed with ❤️ and a little AI assistance for the Steam Deck and PC gaming community*
 
-Distributed under the **GNU General Public License v3.0**
+## License
 
-See [`LICENSE`](LICENSE) for the full license text.
+GNU General Public License v3.0 — see [`LICENSE`](LICENSE)
