@@ -131,7 +131,7 @@ All data is stored locally under `~/.config/PrefixHQ/`:
 ## 🤝 Contributing & Support
 
 - 💡 Have an idea for a new theme? Open a PR or suggest it in an issue!
-- 🐛 Found a bug? [Open an issue](https://github.com/Nastas95/SteamClip/issues)
+- 🐛 Found a bug? [Open an issue](https://github.com/Nastas95/PrefixHQ/issues)
 
 ---
 *Developed with ❤️ for the Steam Deck and PC Gaming community*
