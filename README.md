@@ -128,6 +128,16 @@ All data is stored locally under `~/.config/PrefixHQ/`:
 
 ---
 
+## 🤝 Contributing & Support
+
+- 💡 Have an idea for a new theme? Open a PR or suggest it in an issue!
+- 🐛 Found a bug? [Open an issue](https://github.com/Nastas95/SteamClip/issues)
+
+---
+*Developed with ❤️ for the Steam Deck and PC Gaming community*
+
+---
+
 ## 📝 License
 
 Distributed under the **GNU General Public License v3.0**
