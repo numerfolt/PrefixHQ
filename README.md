@@ -7,7 +7,8 @@
 A modern, visual manager for Steam CompatData (Proton/Wine prefixes) on Linux.  
 Transform your folder structure into a beautiful game library with automatic cover art and multi-library awareness.
 
-<img width="1003" height="745" alt="immagine" src="https://github.com/user-attachments/assets/0d7c25f6-46ba-40f0-8709-8053842ec777" />
+<img width="1012" height="759" alt="immagine" src="https://github.com/user-attachments/assets/dbd8908d-fe4c-4f92-b942-7a0c635c520f" />
+
 
 
 ---
