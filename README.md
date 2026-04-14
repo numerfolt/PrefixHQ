@@ -37,7 +37,7 @@ Steam names your prefix folders after AppIDs — so instead of "Starfield" you g
 
 - Linux
 - Python 3.8+ (If you run directly the .py file)
-- `PyQt6 >= 6.4.0`, `requests >= 2.28.0`
+- `PyQt6 >= 6.4.0`, `requests >= 2.28.0`, `Markdown>=3.3.0`
 
 ---
 
