@@ -1,7 +1,3 @@
-# *THE CODE IS UNDERGOING FULL HUMAN REFACTORING*
-
----
-
 # PrefixHQ
 
 ![Linux](https://img.shields.io/badge/Platform-Linux-%23FCC624?logo=linux)
