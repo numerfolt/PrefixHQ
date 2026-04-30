@@ -54,6 +54,9 @@ CACHE_DIR = get_xdg_dir("XDG_CACHE_HOME", Path.home() / ".cache") / "PrefixHQ"
 DB_FILE = CONFIG_DIR / "prefix_db.json"
 IMG_CACHE_DIR = CACHE_DIR
 
+# Ignore app ids we don't want to manage:
+# 0 is no app, 228980 is "Steamworks Common Redistributables"
+# 1070560, 1391110 and 1628350 are "Steam Linux Runtime" v1-3
 IGNORE_APPIDS = {"0", "228980", "1070560", "1391110", "1628350"}
 
 
