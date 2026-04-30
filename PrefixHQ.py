@@ -775,7 +775,7 @@ class MainWindow(QMainWindow):
         self.main_layout.addWidget(footer_widget)
 
         self.refresh_prefix_data()
-        if self.tgl_auto_check_update.isChecked():
+        if self.auto_check_update:
             QTimer.singleShot(3000, lambda: self.perform_update_check(show_message=False))
 
     def close_application(self):
